@@ -1,32 +1,27 @@
-import bcrypt from 'bcrypt';
-import prisma from '@/app/libs/prismadb';
-import { NextResponse } from 'next/server';
+import bcrypt from "bcrypt";
 
+import prisma from "@/app/libs/prismadb";
+import { NextResponse } from "next/server";
 
+export async function POST(
+  request: Request
+) {
+  const body = await request.json();
+  const {
+    email,
+    name,
+    password
+  } = body;
 
-export async function POST(request: Request) {
-    try {
-        const body = await request.json();
+  const hashedPassword = await bcrypt.hash(password, 12);
 
-        const { name, email, password } = body;
-    
-        if (!name || !email || !password) {
-            return new NextResponse('Missing info on register', { status: 400 });
-        }
-    
-        const hashedPassword = await bcrypt.hash(password, 12);
-    
-        const user = await prisma.user.create({
-            data: {
-                name,
-                email,
-                hashedPassword
-            }
-        });
-    
-        return NextResponse.json(user);
-    } catch (error) {
-        console.log('Register user error: -', error);
-        return new NextResponse('Error on register user', { status: 500 });
+  const user = await prisma.user.create({
+    data: {
+      email,
+      name,
+      hashedPassword
     }
+  });
+
+  return NextResponse.json(user);
 }
