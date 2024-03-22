@@ -1,7 +1,8 @@
+import ToasterContext from './context/ToasterContext'
 import './globals.css'
 
 export const metadata = {
-  title: 'Messenger CLone',
+  title: 'Messenger Clone',
   description: 'Its a tutorial example',
 }
 
@@ -12,7 +13,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <ToasterContext/>
+        {children}
+      </body>
     </html>
   )
 }
