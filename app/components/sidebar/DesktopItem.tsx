@@ -43,6 +43,7 @@ const DesktopItem: React.FC<DesktopItemProps> = ({
           )}
       >
         <Icon className="h-6 w-6 shrink-0" aria-hidden="true" />
+        {/* sr is for only SEO, and hidden on client side, its only for server side, and SEO */}
         <span className="sr-only">{label}</span>
       </Link>
     </li>
