@@ -2,10 +2,13 @@
 
 import Button from '@/app/components/Button';
 import Input from '@/app/components/inputs/Input';
-import  { useCallback, useState } from 'react'
+import  { useCallback, useEffect, useState } from 'react'
 import { FieldValues, SubmitHandler, useForm } from 'react-hook-form';
 import AuthSocialButton from './AuthSocialButton';
 import { BsGithub, BsGoogle } from 'react-icons/bs';
+import axios from 'axios';
+import toast from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 
 type Variant = 'login' | 'register'
 
@@ -22,7 +25,7 @@ const AuthForm = () => {
         }
     }, [variant]);
 
-    const { register, handleSubmit, formState: { errors } } = useForm<FieldValues>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FieldValues>({
         defaultValues: {
             name: '',
             email: '',
@@ -30,25 +33,51 @@ const AuthForm = () => {
         }
     });
 
+    useEffect(() => {
+        reset();
+    }, [variant]);
+
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         setisLoading(true);
-        console.log(data);
-        setisLoading(false);
-
+        
         if (variant === 'login') {
-            // Axios Login
+             // Login - NextAuth server
+             signIn('credentials', {
+                ...data,
+                redirect: false,
+             })
+             .then((callback) => {
+                if (callback?.error) {
+                    toast.error('Invalid credentials');
+                } 
+
+                if (callback?.ok && !callback.error) {
+                    toast.success('Logged in');
+                }
+             })
+             .finally(() => setisLoading(false));
         } 
 
         if (variant === 'register') {
-            // Next Auth Register
+            // Axios Register - Call HTTP
+            axios.post('/api/register', data)
+            .catch((error) => toast.error('Something went wrong'))
+            .finally(() => setisLoading(false));
         }
     }
 
     const socialAction = (action: string) => {
         setisLoading(true);
-        console.log(action);
-        // Next Auth Social Login
-        setisLoading(false);
+        signIn(action, { redirect: false })
+        .then((callback) => {
+            if (callback?.error) {
+                toast.error('Something went wrong!');
+            }
+            if (callback?.ok && !callback.error) {
+                toast.success('Logged in!');
+            }
+         })
+         .finally(() => setisLoading(false));
     }
 
 
@@ -82,7 +111,7 @@ const AuthForm = () => {
                 variant === 'register' && (
                     <Input 
                         id='name' 
-                        label='Name' 
+                        label='Full Name' 
                         register={register} 
                         errors={errors}
                         disabled={isLoading}
@@ -100,6 +129,7 @@ const AuthForm = () => {
             <Input 
                 id='password' 
                 label='Password' 
+                type='password'
                 register={register} 
                 errors={errors}
                 disabled={isLoading}
