@@ -16,12 +16,13 @@ interface MobileFooterProps {
 const MobileFooter:  React.FC<MobileFooterProps> = ({ currentUser }) => {
   const routes = useRoutes();
   const { isOpen } = useConversation();
+  const [isOpenModal, setIsOpen] = useState(false);
+  
   
   if (isOpen) {
     return null;
   }
 
-  const [isOpenModal, setIsOpen] = useState(false);
 
   return ( 
     <>
