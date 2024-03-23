@@ -1,3 +1,6 @@
+"use client"
+
+
 import axios from "axios";
 import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -10,9 +13,7 @@ interface UserBoxProps {
   data: User
 }
 
-const UserBox: React.FC<UserBoxProps> = ({ 
-  data
-}) => {
+const UserBox: React.FC<UserBoxProps> = ({ data }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +32,8 @@ const UserBox: React.FC<UserBoxProps> = ({
       {isLoading && (
         <LoadingModal />
       )}
+      
+      {/* User row */}
       <div
         onClick={handleClick}
         className="
@@ -47,13 +50,15 @@ const UserBox: React.FC<UserBoxProps> = ({
           cursor-pointer
         "
       >
+        {/* Avatar */}
         <Avatar user={data} />
+        {/* User Name */}
         <div className="min-w-0 flex-1">
           <div className="focus:outline-none">
             <span className="absolute inset-0" aria-hidden="true" />
             <div className="flex justify-between items-center mb-1">
               <p className="text-sm font-medium text-gray-900">
-                {data.name}
+                { data.name }
               </p>
             </div>
           </div>
