@@ -4,22 +4,18 @@ import getCurrentUser from "@/app/actions/getCurrentUser";
 import { pusherServer } from '@/app/libs/pusher'
 import prisma from "@/app/libs/prismadb";
 
-export async function POST(
-  request: Request,
-) {
+export async function POST(request: Request) {
   try {
-    const currentUser = await getCurrentUser();
-    const body = await request.json();
-    const {
-      message,
-      image,
-      conversationId
-    } = body;
 
+    const currentUser = await getCurrentUser();
+
+    const body = await request.json();
+    const { message,image,conversationId } = body;
+    //  Check if user is authenticated
     if (!currentUser?.id || !currentUser?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
-
+    // Create message on db
     const newMessage = await prisma.message.create({
       include: {
         seen: true,
@@ -35,14 +31,11 @@ export async function POST(
           connect: { id: currentUser.id }
         },
         seen: {
-          connect: {
-            id: currentUser.id
-          }
+          connect: { id: currentUser.id }
         },
       }
     });
-
-    
+    // Update conversations where the user send the message
     const updatedConversation = await prisma.conversation.update({
       where: {
         id: conversationId
@@ -75,7 +68,7 @@ export async function POST(
         messages: [lastMessage]
       });
     });
-
+    // Return the new message
     return NextResponse.json(newMessage)
   } catch (error) {
     console.log(error, 'ERROR_MESSAGES')

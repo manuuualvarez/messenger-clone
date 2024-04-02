@@ -24,7 +24,9 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const { members } = useActiveList();
+  // Online status image
   const isActive = members.indexOf(otherUser?.email!) !== -1;
+  // Online status text
   const statusText = useMemo(() => {
     if (conversation.isGroup) {
       return `${conversation.users.length} members`;
@@ -56,6 +58,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
       "
     >
       <div className="flex gap-3 items-center">
+        {/* Go back chevron - MOBILE */}
         <Link
           href="/conversations" 
           className="
@@ -69,11 +72,13 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         >
           <HiChevronLeft size={32} />
         </Link>
+        {/* Avatar User/Group Image */}
         {conversation.isGroup ? (
           <AvatarGroup users={conversation.users} />
         ) : (
           <Avatar user={otherUser} />
         )}
+        {/* Status text */}
         <div className="flex flex-col">
           <div>{conversation.name || otherUser.name}</div>
           <div className="text-sm font-light text-neutral-500">
@@ -81,6 +86,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
           </div>
         </div>
       </div>
+      {/* More Options Button */}
       <HiEllipsisHorizontal
         size={32}
         onClick={() => setDrawerOpen(true)}
@@ -92,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ conversation }) => {
         "
       />
     </div>
-    </>
+  </>
   );
 }
  
