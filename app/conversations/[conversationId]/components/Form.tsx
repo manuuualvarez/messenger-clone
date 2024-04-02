@@ -1,15 +1,8 @@
 'use client';
 
-import { 
-  HiPaperAirplane, 
-  HiPhoto
-} from "react-icons/hi2";
+import { HiPaperAirplane, HiPhoto } from "react-icons/hi2";
 import MessageInput from "./MessageInput";
-import { 
-  FieldValues, 
-  SubmitHandler, 
-  useForm 
-} from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { CldUploadButton } from "next-cloudinary";
 import useConversation from "@/app/hooks/useConversation";
@@ -17,19 +10,13 @@ import useConversation from "@/app/hooks/useConversation";
 const Form = () => {
   const { conversationId } = useConversation();
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: {
-      errors,
-    }
-  } = useForm<FieldValues>({
+  const { register, handleSubmit, setValue, formState: { errors }} = useForm<FieldValues>({
     defaultValues: {
       message: ''
     }
   });
 
+  // Send message
   const onSubmit: SubmitHandler<FieldValues> = (data) => {
     setValue('message', '', { shouldValidate: true });
     axios.post('/api/messages', {
@@ -37,7 +24,7 @@ const Form = () => {
       conversationId: conversationId
     })
   }
-
+  // Upload image
   const handleUpload = (result: any) => {
     axios.post('/api/messages', {
       image: result.info.secure_url,
@@ -59,17 +46,21 @@ const Form = () => {
         w-full
       "
     >
+      {/* Clouddinary Button Options */}
       <CldUploadButton 
         options={{ maxFiles: 1 }} 
         onUpload={handleUpload} 
-        uploadPreset="pgc9ehd5"
+        // Cloudinary Upload Preset - 
+        uploadPreset="c6jblwnm"
       >
         <HiPhoto size={30} className="text-sky-500" />
       </CldUploadButton>
+      {/* Form */}
       <form 
         onSubmit={handleSubmit(onSubmit)} 
         className="flex items-center gap-2 lg:gap-4 w-full"
       >
+        {/* Textfield */}
         <MessageInput 
           id="message" 
           register={register} 
@@ -77,6 +68,7 @@ const Form = () => {
           required 
           placeholder="Write a message"
         />
+        {/* Send Message Button */}
         <button 
           type="submit" 
           className="
