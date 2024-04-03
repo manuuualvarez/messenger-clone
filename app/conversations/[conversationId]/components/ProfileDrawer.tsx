@@ -21,11 +21,7 @@ interface ProfileDrawerProps {
   }
 }
 
-const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
-  isOpen,
-  onClose,
-  data,
-}) => {
+const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const otherUser = useOtherUser(data);
   
@@ -67,7 +63,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({
           >
           <div className="fixed inset-0 bg-black bg-opacity-40" />
         </Transition.Child>
-
+          {/* User profile data */}
           <div className="fixed inset-0 overflow-hidden">
             <div className="absolute inset-0 overflow-hidden">
               <div className="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
