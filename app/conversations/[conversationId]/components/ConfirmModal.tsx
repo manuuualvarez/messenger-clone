@@ -15,8 +15,10 @@ interface ConfirmModalProps {
   onClose: () => void;
 }
 
-const ConfirmModal: React.FC<ConfirmModalProps> = ({ isOpen, onClose }) => {
-  
+const ConfirmModal: React.FC<ConfirmModalProps> = ({ 
+  isOpen, 
+  onClose 
+}) => {
   const router = useRouter();
   const { conversationId } = useConversation();
   const [isLoading, setIsLoading] = useState(false);

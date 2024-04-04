@@ -1,7 +1,7 @@
 'use client';
 
 import clsx from "clsx";
-// Hook to know if the conversation is open
+
 import useConversation from "../hooks/useConversation";
 import EmptyState from "../components/EmptyState";
 

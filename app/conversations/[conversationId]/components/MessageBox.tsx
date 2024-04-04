@@ -15,19 +15,20 @@ interface MessageBoxProps {
   isLast?: boolean;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast}) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ 
+  data, 
+  isLast
+}) => {
   const session = useSession();
   const [imageModalOpen, setImageModalOpen] = useState(false);
 
 
   const isOwn = session.data?.user?.email === data?.sender?.email
-
   const seenList = (data.seen || [])
     .filter((user) => user.email !== data?.sender?.email)
     .map((user) => user.name)
     .join(', ');
 
-  // Box styles
   const container = clsx('flex gap-3 p-4', isOwn && 'justify-end');
   const avatar = clsx(isOwn && 'order-2');
   const body = clsx('flex flex-col gap-2', isOwn && 'items-end');
@@ -39,28 +40,23 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast}) => {
 
   return ( 
     <div className={container}>
-      {/* Avatar Image */}
       <div className={avatar}>
         <Avatar user={data.sender} />
       </div>
-      {/* Message Box */}
       <div className={body}>
         <div className="flex items-center gap-1">
-          {/* Name */}
           <div className="text-sm text-gray-500">
             {data.sender.name}
           </div>
-          {/* Time */}
           <div className="text-xs text-gray-400">
             {format(new Date(data.createdAt), 'p')}
           </div>
         </div>
-        {/* Message */}
         <div className={message}>
           <ImageModal src={data.image} isOpen={imageModalOpen} onClose={() => setImageModalOpen(false)} />
           {data.image ? (
             <Image
-              alt="Message Image"
+              alt="Image"
               height="288"
               width="288"
               onClick={() => setImageModalOpen(true)} 
@@ -77,7 +73,6 @@ const MessageBox: React.FC<MessageBoxProps> = ({ data, isLast}) => {
             <div>{data.body}</div>
           )}
         </div>
-        {/* Seen By */}
         {isLast && isOwn && seenList.length > 0 && (
           <div 
             className="
