@@ -57,20 +57,16 @@ export async function POST( request: Request, { params }: { params: IParams }) {
       }
     });
     // Update all connections with new seen
-    // TODO: Uncomment
-    // await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //   id: conversationId,
-    //   messages: [updatedMessage]
-    // });
-
-
+    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+      id: conversationId,
+      messages: [updatedMessage]
+    });
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
       return NextResponse.json(conversation);
     }
     // Update last message seen
-    // TODO: Uncomment
-    // await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
     return new NextResponse('Success');
   } catch (error) {

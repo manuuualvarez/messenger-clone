@@ -28,12 +28,14 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
   // Use Socket
   useEffect(() => {
     pusherClient.subscribe(conversationId)
+
     bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
 
       setMessages((current) => {
+        // To avoid duplicate messages
         if (find(current, { id: message.id })) {
           return current;
         }

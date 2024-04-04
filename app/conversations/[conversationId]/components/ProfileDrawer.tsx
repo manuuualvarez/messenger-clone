@@ -46,10 +46,12 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ isOpen, onClose, data }) 
 
   return (
     <>
+    {/* Confirm model to delete chat */}
       <ConfirmModal 
         isOpen={confirmOpen} 
         onClose={() => setConfirmOpen(false)}
       />
+      {/* Other user Right Side Bar */}
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-50" onClose={onClose}>
           <Transition.Child

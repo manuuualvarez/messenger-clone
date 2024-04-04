@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { pusherServer } from "@/app/libs/pusher";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
+// ! Its only for pusher and check if user is logged in
 export default async function handler(
   request: NextApiRequest, 
   response: NextApiResponse

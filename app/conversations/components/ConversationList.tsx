@@ -37,9 +37,9 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
     if (!pusherKey) {
       return;
     }
-
+    // Create my key, to setup my chanel on pusher
     pusherClient.subscribe(pusherKey);
-
+    // Listen needed events on our sidebar
     const updateHandler = (conversation: FullConversationType) => {
       setItems((current) => current.map((currentConversation) => {
         if (currentConversation.id === conversation.id) {
@@ -52,17 +52,17 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
         return currentConversation;
       }));
     }
-
+    // Listen new conversations
     const newHandler = (conversation: FullConversationType) => {
+      // Check if the conversation already exists (avoid to add the same conversation twice)
       setItems((current) => {
         if (find(current, { id: conversation.id })) {
           return current;
         }
-
         return [conversation, ...current]
       });
     }
-
+    // Listen remove conversations
     const removeHandler = (conversation: FullConversationType) => {
       setItems((current) => {
         return [...current.filter((convo) => convo.id !== conversation.id)]
