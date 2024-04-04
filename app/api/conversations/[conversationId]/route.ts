@@ -8,7 +8,10 @@ interface IParams {
   conversationId?: string;
 }
 
-export async function DELETE(request: Request, { params }: { params: IParams }) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: IParams }
+) {
   try {
     const { conversationId } = params;
     const currentUser = await getCurrentUser();
@@ -34,7 +37,6 @@ export async function DELETE(request: Request, { params }: { params: IParams }) 
       where: {
         id: conversationId,
         userIds: {
-          // Needed to check if the user is part of the conversation
           hasSome: [currentUser.id]
         },
       },

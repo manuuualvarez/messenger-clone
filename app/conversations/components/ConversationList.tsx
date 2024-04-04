@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { MdOutlineGroupAdd } from 'react-icons/md';
 import clsx from "clsx";
-import { find } from 'lodash';
+import { find, uniq } from 'lodash';
 
 import useConversation from "@/app/hooks/useConversation";
 import { pusherClient } from "@/app/libs/pusher";
@@ -20,7 +20,10 @@ interface ConversationListProps {
   title?: string;
 }
 
-const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users }) => {
+const ConversationList: React.FC<ConversationListProps> = ({ 
+  initialItems, 
+  users
+}) => {
   const [items, setItems] = useState(initialItems);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -37,9 +40,9 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
     if (!pusherKey) {
       return;
     }
-    // Create my key, to setup my chanel on pusher
+
     pusherClient.subscribe(pusherKey);
-    // Listen needed events on our sidebar
+
     const updateHandler = (conversation: FullConversationType) => {
       setItems((current) => current.map((currentConversation) => {
         if (currentConversation.id === conversation.id) {
@@ -52,17 +55,17 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
         return currentConversation;
       }));
     }
-    // Listen new conversations
+
     const newHandler = (conversation: FullConversationType) => {
-      // Check if the conversation already exists (avoid to add the same conversation twice)
       setItems((current) => {
         if (find(current, { id: conversation.id })) {
           return current;
         }
+
         return [conversation, ...current]
       });
     }
-    // Listen remove conversations
+
     const removeHandler = (conversation: FullConversationType) => {
       setItems((current) => {
         return [...current.filter((convo) => convo.id !== conversation.id)]
@@ -72,7 +75,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
     pusherClient.bind('conversation:update', updateHandler)
     pusherClient.bind('conversation:new', newHandler)
     pusherClient.bind('conversation:remove', removeHandler)
-
   }, [pusherKey, router]);
 
   return (
@@ -94,15 +96,11 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
         border-r 
         border-gray-200 
       `, isOpen ? 'hidden' : 'block w-full left-0')}>
-
         <div className="px-5">
-          {/* Header */}
           <div className="flex justify-between mb-4 pt-4">
-            {/* Title */}
             <div className="text-2xl font-bold text-neutral-800">
               Messages
             </div>
-            {/* Create new conversation group */}
             <div 
               onClick={() => setIsModalOpen(true)} 
               className="
@@ -118,7 +116,6 @@ const ConversationList: React.FC<ConversationListProps> = ({ initialItems, users
               <MdOutlineGroupAdd size={20} />
             </div>
           </div>
-          {/* List */}
           {items.map((item) => (
             <ConversationBox
               key={item.id}

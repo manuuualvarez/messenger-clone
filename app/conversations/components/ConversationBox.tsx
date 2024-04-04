@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { Conversation, Message, User } from "@prisma/client";
 import { format } from "date-fns";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
@@ -16,21 +17,24 @@ interface ConversationBoxProps {
   selected?: boolean;
 }
 
-const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => {
-  // Return the name off other user
+const ConversationBox: React.FC<ConversationBoxProps> = ({ 
+  data, 
+  selected 
+}) => {
   const otherUser = useOtherUser(data);
   const session = useSession();
   const router = useRouter();
-  // Change the route to the conversation
+
   const handleClick = useCallback(() => {
     router.push(`/conversations/${data.id}`);
   }, [data, router]);
 
   const lastMessage = useMemo(() => {
     const messages = data.messages || [];
+
     return messages[messages.length - 1];
   }, [data.messages]);
-  // Current user
+
   const userEmail = useMemo(() => session.data?.user?.email,
   [session.data?.user?.email]);
   
@@ -48,7 +52,7 @@ const ConversationBox: React.FC<ConversationBoxProps> = ({ data, selected }) => 
     return seenArray
       .filter((user) => user.email === userEmail).length !== 0;
   }, [userEmail, lastMessage]);
-  // Last message ¡to show
+
   const lastMessageText = useMemo(() => {
     if (lastMessage?.image) {
       return 'Sent an image';

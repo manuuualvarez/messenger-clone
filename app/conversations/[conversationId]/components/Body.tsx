@@ -14,28 +14,23 @@ interface BodyProps {
 }
 
 const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
-
   const bottomRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState(initialMessages);
   
   const { conversationId } = useConversation();
 
-  // Mark as seen
   useEffect(() => {
     axios.post(`/api/conversations/${conversationId}/seen`);
   }, [conversationId]);
 
-  // Use Socket
   useEffect(() => {
     pusherClient.subscribe(conversationId)
-
     bottomRef?.current?.scrollIntoView();
 
     const messageHandler = (message: FullMessageType) => {
       axios.post(`/api/conversations/${conversationId}/seen`);
 
       setMessages((current) => {
-        // To avoid duplicate messages
         if (find(current, { id: message.id })) {
           return current;
         }
@@ -56,6 +51,7 @@ const Body: React.FC<BodyProps> = ({ initialMessages = [] }) => {
       }))
     };
   
+
     pusherClient.bind('messages:new', messageHandler)
     pusherClient.bind('message:update', updateMessageHandler);
 

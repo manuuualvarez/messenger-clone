@@ -11,16 +11,17 @@ interface DesktopSidebarProps {
   currentUser: User
 }
 
-const DesktopSidebar: React.FC<DesktopSidebarProps> = ({ currentUser }) => {
-  // My Hook
+const DesktopSidebar: React.FC<DesktopSidebarProps> = ({
+  currentUser
+}) => {
   const routes = useRoutes();
   const [isOpen, setIsOpen] = useState(false);
 
+  console.log({ currentUser, }, 'TEST')
+
   return ( 
     <>
-    {/* Setup Profile */}
       <SettingsModal currentUser={currentUser} isOpen={isOpen} onClose={() => setIsOpen(false)} />
-      {/* Sidebar */}
       <div className="
         hidden 
         lg:fixed 
